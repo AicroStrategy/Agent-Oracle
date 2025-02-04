@@ -159,6 +159,7 @@ export class TwitterProvider {
     };
 
     await makeAlloraPrediction();
+    // EVery 8 hours
     setInterval(makeAlloraPrediction, 8 * 60 * 60 * 1000);
   }
 
