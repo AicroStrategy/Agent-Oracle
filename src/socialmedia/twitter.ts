@@ -132,6 +132,10 @@ export class TwitterProvider {
     );
   }
 
+  public async alloraPredict() {
+    console.log('Allora');
+  }
+
   public async startReplyingToMentions() {
     const defaultBound = 2;
     const lowerBound =

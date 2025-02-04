@@ -97,6 +97,20 @@ program
   });
 
 program
+  .command("allora-predict")
+  .description("Report allora BTC predictions 8h")
+  .argument("<username>", "Username of the agent")
+  .action(async username => {
+    const character = CHARACTERS.find(x => x.username === username);
+    if (!character) {
+      throw new Error(`Character not found: ${username}`);
+    }
+    const twitterProvider = new TwitterProvider(character);
+    await twitterProvider.initWithCookies();
+    await twitterProvider.alloraPredict();
+  });
+
+program
   .command("topicPost")
   .description("Start topic posting for Twitter")
   .argument("<username>", "Username of the agent")
