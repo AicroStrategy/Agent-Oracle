@@ -133,26 +133,33 @@ export class TwitterProvider {
   }
 
   public async alloraPredict() {
-    console.log('Allora');
-    const myHeaders = new Headers();
-    myHeaders.append("accept", "application/json");
-    myHeaders.append("x-api-key", "UP-c3e016f107d240f48365dc78");
+    const makeAlloraPrediction = async () => {
+      try {
+        const myHeaders = new Headers();
+        myHeaders.append("accept", "application/json");
+        myHeaders.append("x-api-key", "UP-c3e016f107d240f48365dc78");
 
-    const requestOptions: any = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow"
+        const requestOptions: any = {
+          method: "GET",
+          headers: myHeaders,
+          redirect: "follow"
+        };
+
+        const response = await fetch("https://api.upshot.xyz/v2/allora/consumer/price/ethereum-11155111/BTC/8h", requestOptions);
+        const json: any = await response.json();
+        const predictedBtcPrice = json.data.inference_data.network_inference_normalized;
+        console.log(predictedBtcPrice);
+        const tweetText = `⚡️ Predicted BTC Price in 8 Hours: ${Math.floor(Number(predictedBtcPrice)).toLocaleString()}⚡️\n\nPowered by @AlloraNetwork ✳️`;
+        console.log(tweetText);
+        await this.scraper.sendTweet(tweetText);
+        console.log('Tweeted price prediction!', (new Date()).toLocaleString());
+      } catch (error) {
+        console.error('Error making Allora prediction:', error);
+      }
     };
 
-    const response = await fetch("https://api.upshot.xyz/v2/allora/consumer/price/ethereum-11155111/BTC/8h", requestOptions);
-    const json: any = await response.json();
-    // console.log(json);
-    const predictedBtcPrice = json.data.inference_data.network_inference_normalized;
-    console.log(predictedBtcPrice);
-    const tweetText = `⚡️ Predicted BTC Price in 8 Hours: ${Math.floor(Number(predictedBtcPrice)).toLocaleString()}⚡️\n\nPowered by @AlloraNetwork ✳️`;
-    console.log(tweetText);
-    await this.scraper.sendTweet(tweetText);
-    console.log('Tweeted price prediction!', (new Date()).toLocaleString());
+    await makeAlloraPrediction();
+    setInterval(makeAlloraPrediction, 8 * 60 * 60 * 1000);
   }
 
   public async startReplyingToMentions() {
