@@ -115,7 +115,7 @@ const generateCompletionForCharacter = async (
   if (userPrompt) {
     logger.debug({ userPrompt }, "userPrompt");
     const completion = await openai.chat.completions.create({
-      model: model,
+      model: "gpt-4",
       messages: [
         { role: "system", content: prompt },
         { role: "user", content: userPrompt },
